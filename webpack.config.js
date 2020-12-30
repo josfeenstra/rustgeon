@@ -12,7 +12,7 @@ module.exports = (env, args) => {
         entry: './index.js',
         output: {
             // using hashes make sure that old cashes are succcesfully taken care off
-            path: path.resolve(__dirname, 'dist'),
+            path: path.resolve(__dirname, 'docs'),
             filename: isProductionMode ? '[name].[contenthash].js' : '[name].[hash].js',
         },
         plugins: [
