@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "src"
+		},
+		{
+			"path": "doc"
+		}
+	],
+	"settings": {
+		"git.ignoreLimitWarning": true
+	}
+}
