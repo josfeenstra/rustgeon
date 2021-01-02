@@ -4,7 +4,7 @@ use web_sys::*;
 use web_sys::WebGlRenderingContext as GL;
 use js_sys::WebAssembly;
 
-use super::super::gl_common as gl_common;
+use super::super::gl_common;
 use super::super::math::matrix;
 
 pub struct Program1 

@@ -1,4 +1,4 @@
-const wasm = import('./pkg/');
+const wasm = import('./pkg/geon');
 const canvas = document.getElementById('wasmcanvas');
 const gl = canvas.getContext('webgl', {antialias: true});
 

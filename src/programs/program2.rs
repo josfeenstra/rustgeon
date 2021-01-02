@@ -4,7 +4,7 @@ use web_sys::*;
 use web_sys::WebGlRenderingContext as GL;
 use js_sys::WebAssembly;
 
-use super::super::gl_common as gl_common;
+use super::super::gl_common;
 use super::super::math::matrix;
 
 pub struct Program2
@@ -108,10 +108,10 @@ impl Program2
         let oc = (total_time / 1000.).sin();
 
         let colors: [f32; 16] = [
-            0.0 + oc, 0.0, 1.0, 1.0,
-            0.0, 1.0 + oc, 0.0, 1.0,
-            1.0, 0.0, 0.0 + oc, 1.0,
-            1.0, 0.5 + oc, 0.5, 1.0,
+            0.0, 0.0+oc, 1.0, 1.0,
+            0.0 + oc, 1.0, 0.0, 1.0,
+            1.0, 0.0+ oc, 0.0, 1.0,
+            1.0, 0.5, 0.5 + oc, 1.0,
         ];
 
         let buffer = gl_common::setup_current_buffer(

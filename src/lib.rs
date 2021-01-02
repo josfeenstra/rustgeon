@@ -10,12 +10,11 @@ use web_sys::WebGlRenderingContext as GL;
 extern crate lazy_static;
 
 mod app_state;
-mod glsetup;
 mod shaders;
 mod programs;
-mod gl_common;
+mod renderer;
 mod math;
-
+use renderer::gl_common;
 
 // how to get javascript to rust 
 #[wasm_bindgen]
@@ -46,7 +45,7 @@ impl Client {
     pub fn new() -> Self 
     {
         console_error_panic_hook::set_once();
-        let gl = glsetup::init_webgl_context().unwrap();    
+        let gl = gl_common::init_webgl_context().unwrap();    
         
         Self {
             program: programs::Program2::new(&gl),

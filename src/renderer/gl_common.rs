@@ -1,11 +1,35 @@
-// common functions
-use web_sys::*;
-use web_sys::WebGlRenderingContext as GL;
+// Geon : gl_common 
+// Author: Jos Feenstra
+
+// common functions while using webgl
+// basic abstractions, will try to expand this for 
+// ergonomic usage of webgl
 
 use wasm_bindgen::JsCast;
-// use wasm_bindgen::JsValue;
-
+use wasm_bindgen::JsValue;
+use web_sys::*;
+use web_sys::WebGlRenderingContext as GL;
 use js_sys::WebAssembly;
+
+pub fn init_webgl_context() -> Result<WebGlRenderingContext, JsValue> 
+{
+    // get canvas & gl, deal with dynamic types
+    // TODO : error handling
+    let window = window().unwrap();
+    let document = window.document().unwrap();
+    let canvas = document.get_element_by_id("wasmcanvas").unwrap();
+    let canvas: web_sys::HtmlCanvasElement = canvas.dyn_into::<web_sys::HtmlCanvasElement>()?;
+    let gl: GL = canvas.get_context("webgl")?.unwrap().dyn_into()?;
+
+    // configure
+    gl.enable(GL::BLEND);
+    gl.blend_func(GL::SRC_ALPHA, GL::ONE_MINUS_SRC_ALPHA);
+
+    gl.clear_color(0.0, 0.0, 0.0, 1.0);
+    gl.clear_depth(1.);
+
+    Ok(gl)
+}
 
 pub fn link_program(gl: &WebGlRenderingContext, vs_source: &str, fs_source: &str
     ) -> Result<WebGlProgram, String>
@@ -54,8 +78,6 @@ fn compile_shaders(gl: &WebGlRenderingContext, shader_type: u32, source: &str) -
     }
 }
 
-
-
 pub fn setup_buffer(gl: &GL, pointer: u32, length: u32, buffer_type: u32, draw_type: u32) 
     -> web_sys::WebGlBuffer
 {
@@ -83,34 +105,30 @@ pub fn setup_buffer(gl: &GL, pointer: u32, length: u32, buffer_type: u32, draw_t
 pub fn setup_current_buffer(gl: &GL, pointer: u32, length: u32, buffer_type: u32, draw_type: u32) 
     -> web_sys::WebGlBuffer
 {
-    // lets get a buffer
+    // get memory
     let mem_buffer = wasm_bindgen::memory()
         .dyn_into::<WebAssembly::Memory>()
         .unwrap()
-        .buffer();        
+        .buffer();
+    
+    // get js array        
     let array_js = js_sys::Float32Array::new(&mem_buffer).subarray(
         pointer,
         pointer + length,
     );
+
+    // get actual buffer 
     let buffer = gl.create_buffer()
         .ok_or("failed to create buffer...")
         .unwrap();
+
+    // assign it
     gl.buffer_data_with_array_buffer_view(
         buffer_type, 
         &array_js, 
         draw_type); 
-        
+    
+    // return it
     buffer
 }
 
-// fn something() -> Result<u32, String>
-// {
-//     if false
-//     {
-//         Ok(32)
-//     }
-//     else
-//     {
-//         Err(String::from("not good"))
-//     }
-// }
