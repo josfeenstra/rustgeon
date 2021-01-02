@@ -1,3 +1,5 @@
+// static global stuff 
+
 use std::sync::Arc;
 use std::sync::Mutex;
 

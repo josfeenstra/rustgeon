@@ -8,6 +8,8 @@ use js_sys::WebAssembly;
 use super::super::gl_common;
 use super::super::math::matrix;
 use super::super::geometry;
+use super::super::log_once;
+use super::super::log;
 
 pub struct Program3 {
     // programs
@@ -35,6 +37,9 @@ impl Program3 {
         ).unwrap();
         
         let mesh = geometry::mesh::create_grid(10);
+
+        
+        // let verts_buffer = gl_common::setup_buffer_f32_standard(&gl, &mesh.verts);
         let verts_buffer = gl_common::setup_buffer_f32_standard(&gl, &mesh.verts);
         let index_buffer = gl_common::setup_buffer_u16_standard(&gl, &mesh.indices);
 
@@ -67,7 +72,7 @@ impl Program3 {
             bottom, top, left, right, 
             canvas_width, canvas_height, rotation_angle_x, rotation_angle_y);
         
-        matrix::print(projection);
+        matrix::print_once(projection, "3");
 
         let positionAttributeLocation = 0;
         gl.enable_vertex_attrib_array(positionAttributeLocation);
@@ -77,6 +82,8 @@ impl Program3 {
         gl.bind_buffer(GL::ARRAY_BUFFER, Some(&self.verts_buffer));
         gl.vertex_attrib_pointer_with_i32(positionAttributeLocation, 3, GL::FLOAT, false, 0, 0);
 
+        gl.bind_buffer(GL::ELEMENT_ARRAY_BUFFER, Some(&self.index_buffer));
         gl.draw_elements_with_i32(GL::TRIANGLES, self.index_count, GL::UNSIGNED_SHORT, 0);
+        log_once("i drew something (hopefully...)!", "2");
     }
 }

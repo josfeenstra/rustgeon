@@ -1,7 +1,12 @@
+
+// author : Jos Feenstra
+// based upon: Doug Milfords' Rust 3D Graphics tutorials
+
 // entry point. 
 // ONLY this file talks to javascript.
 // ONLY this file recieves calls by javascript
 extern crate wasm_bindgen;
+use std::sync::Mutex;
 use wasm_bindgen::prelude::*; // still dont really know what prelude does
 // use web_sys::*;
 use web_sys::WebGlRenderingContext as GL;
@@ -28,13 +33,27 @@ extern "C" {
     fn log(s: &str);
 }
 
+use std::collections::HashMap;
+
+lazy_static! {
+    static ref logmap: Mutex<HashMap<String, String>> = Mutex::new(HashMap::new()); 
+}
+
+pub fn log_once(message: &str, key: &str)
+{
+    let mut map = logmap.lock().unwrap();
+    if !map.contains_key(key) {
+        map.insert(key.to_string(), "".to_string());
+        log(&message);    
+    }
+}
+
 // how to get rust to javascript
 #[wasm_bindgen]
 pub fn welcome_message()
 {
     log("goedemorgen");
 }
-
 
 // how to get a class to javascript
 #[wasm_bindgen]
@@ -71,7 +90,7 @@ impl Core {
 
         let state = app_state::get_appstate();
 
-        let oc = (state.total_time / 1000.).sin();
+        let oc = (state.time / 1000.).sin();
 
         self.program1.render(
             &self.gl, 
