@@ -1,4 +1,3 @@
-
 // author : Jos Feenstra
 // based upon: Doug Milfords' Rust 3D Graphics tutorials
 
@@ -55,6 +54,11 @@ pub fn welcome_message()
     log("goedemorgen");
 }
 
+pub struct Screen
+{
+
+}
+
 // how to get a class to javascript
 #[wasm_bindgen]
 pub struct Core {
@@ -74,7 +78,7 @@ impl Core {
         
         Self {
             program1: programs::Program1::new(&gl),
-            program3: programs::Program3::new(&gl),
+            program3: programs::Program3::new(&gl, 50),
             gl: gl,
         }
     }
@@ -82,6 +86,7 @@ impl Core {
     pub fn update(&mut self, time:f32, height: f32, width: f32) -> Result<(), JsValue> 
     {
         app_state::update_appstate(width, height, time);
+        self.program3.update(time);
         Ok(())   
     }
 
@@ -112,8 +117,10 @@ impl Core {
             state.canvas_width,  
             state.canvas_height,
             state.time,
-            0.5 + oc,
-            0.5 + oc,
+            state.cam_rotation_x,
+            state.cam_rotation_y,
         );
+
+
     }
 }

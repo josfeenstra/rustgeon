@@ -5,6 +5,7 @@ use web_sys::WebGlRenderingContext as GL;
 use js_sys::WebAssembly;
 
 use super::super::gl_common;
+use super::super::gl_common::{DrawType, BufferType};
 use super::super::math::matrix;
 
 pub struct Program1 
@@ -30,7 +31,7 @@ impl Program1
         ).unwrap();
 
         // feed the shaders some nice data
-        let verts: [f32; 12] = [
+        let verts: Vec<f32> = vec![
             0.,1.,
             0.,0.,
             1.,1.,
@@ -45,10 +46,9 @@ impl Program1
 
         let buffer = gl_common::setup_buffer_f32( 
             &gl,
-            verts.as_ptr() as u32 / 4, 
-            verts.len() as u32,
-            GL::ARRAY_BUFFER, 
-            GL::STATIC_DRAW,
+            &verts,
+            BufferType::Regular, 
+            DrawType::Static,
         );
 
         // let mem_buffer = wasm_bindgen::memory()

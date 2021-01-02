@@ -74,7 +74,6 @@ impl Program2
             &pattern_verts_js, 
             GL::STATIC_DRAW);
 
-
         // 
         Self 
         {

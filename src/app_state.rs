@@ -53,6 +53,13 @@ pub struct AppState {
 
     pub time: f32,
     pub total_time: f32,
+
+    pub mouse_down: bool,
+    pub mouse_x: f32,
+    pub mouse_y: f32,
+
+    pub cam_rotation_x: f32,
+    pub cam_rotation_y: f32,
 }
 
 impl AppState {
@@ -67,6 +74,58 @@ impl AppState {
             border_top: 0.,
             border_left: 0.,
             border_right: 0.,
+
+            mouse_down: false,
+            mouse_x: 0.,
+            mouse_y: 0.,
+        
+            cam_rotation_x: 0.5,
+            cam_rotation_y: 0.5,
         }
     }
+}
+
+// update mouse data
+pub fn update_mouse_down(x: f32, y: f32, is_down: bool)
+{
+    let mut data = APP_STATE.lock().unwrap();
+    *data = Arc::new(AppState {
+        mouse_down: is_down,
+        mouse_x: x,
+        mouse_y: data.canvas_height - y,
+        ..*data.clone()
+    });
+}
+
+// update camera rotation
+pub fn update_mouse_position(x: f32, y: f32)
+{
+    let mut data = APP_STATE.lock().unwrap();
+
+    let inv_y = data.canvas_height - y;
+
+    let dx = x - data.mouse_x;
+    let dy = inv_y - data.mouse_y;
+
+    let drotx = if data.mouse_down {
+        std::f32::consts::PI * dy / data.canvas_height
+    } else {
+        0.
+    };
+
+    let droty = if data.mouse_down {
+        std::f32::consts::PI * dx / data.canvas_width
+    } else {
+        0.
+    };
+
+    *data = Arc::new(AppState {
+        mouse_x: x,
+        mouse_y: data.canvas_height - y,
+
+        cam_rotation_x: data.cam_rotation_x + drotx,
+        cam_rotation_y: data.cam_rotation_y - droty,
+
+        ..*data.clone()
+    });
 }
