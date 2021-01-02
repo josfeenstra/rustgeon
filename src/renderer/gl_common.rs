@@ -78,7 +78,14 @@ fn compile_shaders(gl: &WebGlRenderingContext, shader_type: u32, source: &str) -
     }
 }
 
-pub fn setup_buffer(gl: &GL, pointer: u32, length: u32, buffer_type: u32, draw_type: u32) 
+pub fn setup_buffer_f32_standard(gl: &GL, data: &Vec<f32>) -> web_sys::WebGlBuffer
+{
+    let ptr = data.as_ptr() as u32 / 2;
+    setup_buffer_f32(&gl, ptr, data.len() as u32, GL::ARRAY_BUFFER, GL::STATIC_DRAW)
+}
+
+
+pub fn setup_buffer_f32(gl: &GL, pointer: u32, length: u32, buffer_type: u32, draw_type: u32) 
     -> web_sys::WebGlBuffer
 {
     // lets get a buffer
@@ -87,6 +94,36 @@ pub fn setup_buffer(gl: &GL, pointer: u32, length: u32, buffer_type: u32, draw_t
         .unwrap()
         .buffer();        
     let array_js = js_sys::Float32Array::new(&mem_buffer).subarray(
+        pointer,
+        pointer + length,
+    );
+    let buffer = gl.create_buffer()
+        .ok_or("failed to create buffer...")
+        .unwrap();
+    gl.bind_buffer(buffer_type, Some(&buffer));
+    gl.buffer_data_with_array_buffer_view(
+        buffer_type, 
+        &array_js, 
+        draw_type); 
+        
+    buffer
+}
+
+pub fn setup_buffer_u16_standard(gl: &GL, data: &Vec<u16>) -> web_sys::WebGlBuffer
+{
+    let ptr = data.as_ptr() as u32 / 2;
+    setup_buffer_u16(&gl, ptr, data.len() as u32, GL::ELEMENT_ARRAY_BUFFER, GL::STATIC_DRAW)
+}
+
+pub fn setup_buffer_u16(gl: &GL, pointer: u32, length: u32, buffer_type: u32, draw_type: u32) 
+    -> web_sys::WebGlBuffer
+{
+    // lets get a buffer
+    let mem_buffer = wasm_bindgen::memory()
+        .dyn_into::<WebAssembly::Memory>()
+        .unwrap()
+        .buffer();        
+    let array_js = js_sys::Uint16Array::new(&mem_buffer).subarray(
         pointer,
         pointer + length,
     );

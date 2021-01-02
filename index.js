@@ -13,7 +13,7 @@ wasm.then(rust =>
     }
 
     // geon
-    const client = new rust.Client();    
+    const client = new rust.Core();    
 
     // timing
     const FPS_THROTTLE = 1000.0 / 144.0; // miliseconds per frame

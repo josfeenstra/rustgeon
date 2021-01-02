@@ -9,12 +9,17 @@ use web_sys::WebGlRenderingContext as GL;
 #[macro_use] 
 extern crate lazy_static;
 
+#[allow(dead_code)]
+
 mod app_state;
 mod shaders;
 mod programs;
 mod renderer;
 mod math;
+mod geometry;
+
 use renderer::gl_common;
+
 
 // how to get javascript to rust 
 #[wasm_bindgen]
@@ -33,13 +38,14 @@ pub fn welcome_message()
 
 // how to get a class to javascript
 #[wasm_bindgen]
-pub struct Client {
+pub struct Core {
     gl: GL,
-    program: programs::Program2,
+    program1: programs::Program1,
+    program3: programs::Program3,
 }
 
 #[wasm_bindgen]
-impl Client {
+impl Core {
 
     #[wasm_bindgen(constructor)]
     pub fn new() -> Self 
@@ -48,7 +54,8 @@ impl Client {
         let gl = gl_common::init_webgl_context().unwrap();    
         
         Self {
-            program: programs::Program2::new(&gl),
+            program1: programs::Program1::new(&gl),
+            program3: programs::Program3::new(&gl),
             gl: gl,
         }
     }
@@ -64,7 +71,9 @@ impl Client {
 
         let state = app_state::get_appstate();
 
-        self.program.render(
+        let oc = (state.total_time / 1000.).sin();
+
+        self.program1.render(
             &self.gl, 
             state.border_top, 
             state.border_bottom, 
@@ -73,6 +82,19 @@ impl Client {
             state.canvas_width,  
             state.canvas_height,
             state.time,
+        );
+
+        self.program3.render(
+            &self.gl, 
+            state.border_top, 
+            state.border_bottom, 
+            state.border_left, 
+            state.border_right, 
+            state.canvas_width,  
+            state.canvas_height,
+            state.time,
+            0.5 + oc,
+            0.5 + oc,
         );
     }
 }

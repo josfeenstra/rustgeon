@@ -43,7 +43,7 @@ impl Program1
 
         // lets get a buffer
 
-        let buffer = gl_common::setup_buffer( 
+        let buffer = gl_common::setup_buffer_f32( 
             &gl,
             verts.as_ptr() as u32 / 4, 
             verts.len() as u32,
@@ -82,9 +82,10 @@ impl Program1
         gl.use_program(Some(&self.program));
 
         // procedure for 1 buffer
+        gl.enable_vertex_attrib_array(0);
         gl.bind_buffer(GL::ARRAY_BUFFER, Some(&self.buffer));
         gl.vertex_attrib_pointer_with_i32(0, 2, GL::FLOAT, false, 0, 0);
-        gl.enable_vertex_attrib_array(0);
+        
 
         // 
         gl.uniform4f(Some(&self.u_color), 0., 1.0, 0.5, 1.0);
