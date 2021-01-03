@@ -44,7 +44,7 @@ impl Program3 {
         
         // THE ACTUAL DATA
         let mesh = geometry::mesh::create_grid(size);
-        let mut y_data = vec![0.0; mesh.verts.len()];
+        let y_data = vec![0.0; mesh.verts.len()];
 
         let verts_buffer = gl_common::setup_buffer_f32(&gl, &mesh.verts, BufferType::Regular, DrawType::Static);
         let index_buffer = gl_common::setup_buffer_u16(&gl, &mesh.indices, BufferType::Element, DrawType::Static);
@@ -105,19 +105,9 @@ impl Program3 {
         let wireframe: bool = true;
         if wireframe {
             gl.draw_elements_with_i32(GL::LINE_STRIP, self.index_count, GL::UNSIGNED_SHORT, 0);
-        } else {
-            gl.draw_elements_with_i32(GL::TRIANGLES, self.index_count, GL::UNSIGNED_SHORT, 0);
-        }
+        } 
+        gl.draw_elements_with_i32(GL::TRIANGLES, self.index_count, GL::UNSIGNED_SHORT, 0);
     }
-}
-
-pub fn SineWave(count: usize, t: f32) -> Vec<f32> {
-
-    let mut field: Vec<f32> = vec![0.0; count as usize];
-    for i in 0..count {
-        field[i] = (i as f32 / t).sin();
-    }
-    field
 }
 
 pub fn get_updated_3d_y_values(size: usize, curr_time: f32) -> Vec<f32> {
