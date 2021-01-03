@@ -106,6 +106,7 @@ impl Program3 {
         if wireframe {
             gl.draw_elements_with_i32(GL::LINE_STRIP, self.index_count, GL::UNSIGNED_SHORT, 0);
         } 
+        gl.uniform1f(Some(&self.u_opacity), 0.5);
         gl.draw_elements_with_i32(GL::TRIANGLES, self.index_count, GL::UNSIGNED_SHORT, 0);
     }
 }

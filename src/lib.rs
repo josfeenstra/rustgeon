@@ -13,16 +13,15 @@ use web_sys::WebGlRenderingContext as GL;
 #[macro_use] 
 extern crate lazy_static;
 
-#[allow(dead_code)]
-
 mod app_state;
 mod shaders;
-mod programs;
-mod renderer;
 mod math;
 mod geometry;
+mod programs;
+mod systems;
 
-use renderer::gl_common;
+use systems::gl_common;
+use systems::context;
 
 
 // how to get javascript to rust 
@@ -74,7 +73,7 @@ impl Core {
     pub fn new() -> Self 
     {
         console_error_panic_hook::set_once();
-        let gl = gl_common::init_webgl_context().unwrap();    
+        let gl = context::init_webgl_context().unwrap();    
         
         Self {
             program1: programs::Program1::new(&gl),
