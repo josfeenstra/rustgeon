@@ -8,7 +8,7 @@ pub const SHADER: &str = r#"
 
     void main() {
         gl_Position = uProjection * vec4(aPosition.x, aY, aPosition.z, 1.0);
-        vColor = vec4(0.5, 0.5, (aY + 1.0 / 2.0), 1.0);
+        vColor = vec4((aY + 1.0) / 2.0, 0.5, 0.5, 1.0);
     }
     
 "#;
