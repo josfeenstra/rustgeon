@@ -1,6 +1,6 @@
 // author: Jos Feenstra 
 // based on: Doug Milford's Rust tutorials
-use nalgebra::{Perspective3};
+use nalgebra::Perspective3;
 
 pub fn create_identity() -> [f32; 16]
 {
@@ -100,7 +100,7 @@ pub fn print_once(m: [f32; 16], key: &str)
 // get the 'camera' matrix
 pub fn get_3d_projection_matrix(
     bottom: f32, top: f32, left: f32, right: f32,
-    canvas_width: f32, canvas_height: f32, alpha_angle: f32, beta_angle: f32
+    canvas_width: f32, canvas_height: f32, alpha_angle: f32, beta_angle: f32, scroll_scale: f32
 ) -> [f32; 16] {
     const PI: f32 = std::f32::consts::PI;
     const FIELD_OF_VIEW: f32 = 45. * std::f32::consts::PI / 100.;
@@ -112,8 +112,8 @@ pub fn get_3d_projection_matrix(
     let aspect: f32 = canvas_width / canvas_height; // note: this should be constant
     let scale_x = (right-left) / canvas_width;
     let scale_y = (top-bottom) / canvas_height;
-    let scale_val = scale_y;
-    
+    let scale_val = scale_y + scroll_scale;
+
     // translated to fit screen
     let translation = create_translation(
         -1. + scale_x + 2. * left / canvas_width,

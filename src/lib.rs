@@ -4,6 +4,13 @@
 // entry point. 
 // ONLY this file talks to javascript.
 // ONLY this file recieves calls by javascript
+
+// ignore dead stuff when developing
+#![allow(dead_code)]
+#![allow(unused_imports)]
+#![allow(unused_variables)]
+#![allow(unused_unsafe)]
+
 extern crate wasm_bindgen;
 use std::sync::Mutex;
 use wasm_bindgen::prelude::*; // still dont really know what prelude does
@@ -24,7 +31,8 @@ use systems::gl_common;
 use systems::context;
 
 
-// how to get javascript to rust 
+// some messy barebones logging
+
 #[wasm_bindgen]
 extern "C" {
     #[wasm_bindgen(js_namespace = console)]
@@ -34,23 +42,31 @@ extern "C" {
 use std::collections::HashMap;
 
 lazy_static! {
-    static ref logmap: Mutex<HashMap<String, String>> = Mutex::new(HashMap::new()); 
+    static ref LOGMAP: Mutex<HashMap<String, String>> = Mutex::new(HashMap::new()); 
 }
 
-pub fn log_once(message: &str, key: &str)
+pub fn log_once(message: &String, key: &str)
 {
-    let mut map = logmap.lock().unwrap();
+    let mut map = LOGMAP.lock().unwrap();
     if !map.contains_key(key) {
         map.insert(key.to_string(), "".to_string());
-        log(&message);    
+        print(&message);    
+    }
+}
+
+pub fn print(message: &String)
+{
+    unsafe {
+        log(message.as_str());
     }
 }
 
 // how to get rust to javascript
+
 #[wasm_bindgen]
 pub fn welcome_message()
 {
-    log("goedemorgen");
+    print(&String::from("goedemorgen"));
 }
 
 pub struct Screen

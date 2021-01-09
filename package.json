@@ -2,7 +2,6 @@
     "scripts": {
         "build": "webpack --mode production",
         "watch": "webpack-dev-server --port 9000 --open"
-        
     },
     "devDependencies": {
         "@wasm-tool/wasm-pack-plugin": "1.0.1",
