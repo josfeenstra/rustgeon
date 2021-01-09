@@ -55,6 +55,8 @@ pub struct Core {
     scenes: Vec<Box<dyn Scene>>,
 }
 
+// Core. Central client to manage all scenes.
+// TODO: make core also deal with all global state 
 #[wasm_bindgen]
 impl Core {
 
@@ -73,7 +75,8 @@ impl Core {
         }
     }
 
-    pub fn update(&mut self, time:f32, height: f32, width: f32) -> Result<(), JsValue> 
+    pub fn update(&mut self, time:f32, height: f32, width: f32) -> 
+    Result<(), JsValue> 
     {
         core_state::update_appstate(width, height, time);
         let state = core_state::get_appstate();

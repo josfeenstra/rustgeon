@@ -9,8 +9,11 @@
 
 ## small things 
 
-- build scrolling with mouse wheel
+- build console::log, singleton to deal with logging -> DONE 
+- build scrolling with mouse wheel -> ...
+- 
 
+________________________________________________________________________________
 
 # Notes from the Doug Milford series on WebGL
 
