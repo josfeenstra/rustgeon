@@ -1,0 +1,1 @@
+github recognises the docs folder, and auto publishes it.
