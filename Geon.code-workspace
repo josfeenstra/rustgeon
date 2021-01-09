@@ -1,0 +1,26 @@
+{
+	"folders": [
+		{
+			"path": "..\\..\\Web\\Geon"
+		},
+		{
+			"path": "..\\..\\Web\\Blood & Toil"
+		},
+		{
+			"path": "."
+		},
+		{
+			"path": "src"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "geon",
+		"editor.rulers": [
+			80, 120
+		],
+		"workbench.colorCustomizations": {
+			"editorRuler.foreground": "#313131"
+		},
+		"git.ignoreLimitWarning": true
+	}
+}

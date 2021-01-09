@@ -1,1 +1,1 @@
-github recognises the docs folder, and auto publishes it.
+github recognises a folder called 'docs', and auto publishes it. at https://josfeenstra.github.io/rustgeon/.
