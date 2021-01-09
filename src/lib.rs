@@ -1,9 +1,12 @@
-// author : Jos Feenstra
-// based upon: Doug Milfords' Rust 3D Graphics tutorials
-
-// entry point. 
-// ONLY this file talks to javascript.
-// ONLY this file recieves calls by javascript
+////////////////////////////////////////////////////////////////////////////////
+// Author :         Jos Feenstra
+// Based upon:      Doug Milfords' Rust 3D Graphics tutorials
+// 
+// File purpose :   Messy Entry Point.
+//                  Core
+//                  - ONLY this file talks to javascript.
+//                  - ONLY this file recieves calls by javascript
+////////////////////////////////////////////////////////////////////////////////
 
 // ignore dead stuff when developing
 #![allow(dead_code)]
@@ -13,6 +16,7 @@
 
 extern crate wasm_bindgen;
 use std::sync::Mutex;
+use scenes::Scene;
 use wasm_bindgen::prelude::*; // still dont really know what prelude does
 // use web_sys::*;
 use web_sys::WebGlRenderingContext as GL;
@@ -20,14 +24,14 @@ use web_sys::WebGlRenderingContext as GL;
 #[macro_use] 
 extern crate lazy_static;
 
-mod app_state;
+mod core_state;
 mod shaders;
 mod math;
 mod geometry;
-mod programs;
+mod scenes;
 mod systems;
 
-use systems::gl_common;
+use systems::{console, gl_common};
 use systems::context;
 
 
@@ -39,47 +43,16 @@ extern "C" {
     fn log(s: &str);
 }
 
-use std::collections::HashMap;
-
-lazy_static! {
-    static ref LOGMAP: Mutex<HashMap<String, String>> = Mutex::new(HashMap::new()); 
-}
-
-pub fn log_once(message: &String, key: &str)
-{
-    let mut map = LOGMAP.lock().unwrap();
-    if !map.contains_key(key) {
-        map.insert(key.to_string(), "".to_string());
-        print(&message);    
-    }
-}
-
-pub fn print(message: &String)
-{
-    unsafe {
-        log(message.as_str());
-    }
-}
-
-// how to get rust to javascript
-
 #[wasm_bindgen]
 pub fn welcome_message()
 {
-    print(&String::from("goedemorgen"));
+    console::log(&String::from("goedemorgen"));
 }
 
-pub struct Screen
-{
-
-}
-
-// how to get a class to javascript
 #[wasm_bindgen]
 pub struct Core {
     gl: GL,
-    program1: programs::Program1,
-    program3: programs::Program3,
+    scenes: Vec<Box<dyn Scene>>,
 }
 
 #[wasm_bindgen]
@@ -92,51 +65,32 @@ impl Core {
         let gl = context::init_webgl_context().unwrap();    
         
         Self {
-            program1: programs::Program1::new(&gl),
-            program3: programs::Program3::new(&gl, 50),
+            scenes: vec![
+                Box::new(scenes::Scene1::new(&gl)),
+                Box::new(scenes::Scene3::new(&gl, 50))
+                ],
             gl: gl,
         }
     }
 
     pub fn update(&mut self, time:f32, height: f32, width: f32) -> Result<(), JsValue> 
     {
-        app_state::update_appstate(width, height, time);
-        self.program3.update(time);
+        core_state::update_appstate(width, height, time);
+        let state = core_state::get_appstate();
+        for scene in self.scenes.iter_mut() {
+            scene.update(&state);
+        }
         Ok(())   
     }
 
     pub fn draw(&self) {
         self.gl.clear(GL::COLOR_BUFFER_BIT | GL::DEPTH_BUFFER_BIT);
 
-        let state = app_state::get_appstate();
+        let state = core_state::get_appstate();
 
         let oc = (state.time / 1000.).sin();
-
-        self.program1.render(
-            &self.gl, 
-            state.border_top, 
-            state.border_bottom, 
-            state.border_left, 
-            state.border_right, 
-            state.canvas_width,  
-            state.canvas_height,
-            state.time,
-        );
-
-        self.program3.render(
-            &self.gl, 
-            state.border_top, 
-            state.border_bottom, 
-            state.border_left, 
-            state.border_right, 
-            state.canvas_width,  
-            state.canvas_height,
-            state.time,
-            state.cam_rotation_x,
-            state.cam_rotation_y,
-            state.mouse_scroll,
-        );
-
-
+        for scene in self.scenes.iter() {
+            scene.draw(&self.gl, &state);
+        }
     }
 }

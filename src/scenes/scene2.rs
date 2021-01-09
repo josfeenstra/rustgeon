@@ -4,10 +4,13 @@ use web_sys::*;
 use web_sys::WebGlRenderingContext as GL;
 use js_sys::WebAssembly;
 
+use crate::core_state::AppState;
+
 use super::super::gl_common;
 use super::super::math::matrix;
+use super::Scene;
 
-pub struct Program2
+pub struct Scene2
 {
     program: WebGlProgram,
     buffer: WebGlBuffer,
@@ -18,8 +21,8 @@ pub struct Program2
     u_transform: WebGlUniformLocation,
 }
 
-impl Program2
-{
+impl Scene2 {
+
     pub fn new(gl: &GL) -> Self {
         
         // setup the program with the shaders
@@ -86,10 +89,13 @@ impl Program2
             buffer: buffer,
         }
     }
+}
 
-    pub fn render(&self, gl: &WebGlRenderingContext, 
-        bottom:f32, top:f32, left:f32, right: f32, canvas_width: f32, canvas_height: f32, total_time: f32)
+impl Scene for Scene2
+{
+    fn draw(&self, gl: &WebGlRenderingContext, state: &AppState)
     {
+        // 
         gl.use_program(Some(&self.program));
 
         // procedure for 1 buffer
@@ -104,7 +110,7 @@ impl Program2
         gl.vertex_attrib_pointer_with_i32(1, 4, GL::FLOAT, false, 0, 0);
         gl.enable_vertex_attrib_array(1);
 
-        let oc = (total_time / 1000.).sin();
+        let oc = (state.time / 1000.).sin();
 
         let colors: [f32; 16] = [
             0.0, 0.0+oc, 1.0, 1.0,
@@ -122,14 +128,14 @@ impl Program2
         );
 
         let tm = matrix::create_translation(
-            2. * left / canvas_width -1.,
-            2. * bottom / canvas_height - 1.,
+            2. * state.border_left / state.canvas_width -1.,
+            2. * state.border_bottom / state.canvas_height - 1.,
             0.
         );
 
         let sm = matrix::create_scale(
-            2. * (right - left) / canvas_width,
-            2. * (top - bottom) / canvas_height,
+            2. * (state.border_right - state.border_left) / state.canvas_width,
+            2. * (state.border_top - state.border_bottom) / state.canvas_height,
             0.
         );
 
@@ -138,5 +144,13 @@ impl Program2
         // gl.draw_arrays(GL::TRIANGLES, 0, (self.buffer_length / 2) as i32);
 
         gl.draw_elements_with_i32(GL::TRIANGLES, self.pattern_length as i32, GL::UNSIGNED_SHORT, 0);
+    }
+
+    fn start(&self) {
+        todo!()
+    }
+
+    fn update(&mut self, state: &AppState) {
+        todo!()
     }
 }

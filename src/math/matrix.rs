@@ -2,6 +2,8 @@
 // based on: Doug Milford's Rust tutorials
 use nalgebra::Perspective3;
 
+use crate::systems::console;
+
 pub fn create_identity() -> [f32; 16]
 {
     [
@@ -92,9 +94,8 @@ pub fn print_once(m: [f32; 16], key: &str)
 {
     // very elegant and scalable...
     let string: String = format!("{}, {}, {}, {} \n{}, {}, {}, {} \n {}, {}, {}, {} \n {}, {}, {}, {}",
-    m[0], m[1],m[2],m[3],m[4],m[5],m[6],m[7], m[8], m[9], m[10], m[11], m[12], m[13], m[14], m[15])
-        ;
-    super::super::log_once(&string, key);
+    m[0], m[1],m[2],m[3],m[4],m[5],m[6],m[7], m[8], m[9], m[10], m[11], m[12], m[13], m[14], m[15]);
+    console::log_once(&string, key);
 }
 
 // get the 'camera' matrix

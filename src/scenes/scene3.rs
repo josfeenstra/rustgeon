@@ -4,14 +4,16 @@ use web_sys::*;
 use web_sys::WebGlRenderingContext as GL;
 use js_sys::WebAssembly;
 
+use crate::core_state::AppState;
+
 use super::super::gl_common;
 use super::super::gl_common::{DrawType, BufferType};
 use super::super::math::matrix;
 use super::super::geometry;
-use super::super::log_once;
-use super::super::log;
+use super::Scene;
 
-pub struct Program3 {
+pub struct Scene3 {
+
     // programs
     pub program: WebGlProgram,
 
@@ -33,7 +35,8 @@ pub struct Program3 {
     pub size: i32,
 }
 
-impl Program3 {
+impl Scene3 {
+
     pub fn new(gl: &WebGlRenderingContext, size: usize) -> Self {
         
         let program = gl_common::link_program(
@@ -71,22 +74,25 @@ impl Program3 {
             size: size as i32,
         }
     }
+}
 
-    pub fn update(&mut self, time: f32)
-    {
-        self.y_data = get_updated_3d_y_values(self.size as usize, time);
+impl Scene for Scene3 {
+
+    fn start(&self) {
+        todo!()
     }
 
-    pub fn render(&self, gl: &WebGlRenderingContext, 
-        top:f32, bottom:f32, left:f32, right: f32, 
-        canvas_width: f32, canvas_height: f32, _total_time: f32,
-        rotation_angle_x: f32, rotation_angle_y: f32, scale: f32)
+    fn update(&mut self, s: &AppState) {
+        self.y_data = get_updated_3d_y_values(self.size as usize, s.time);
+    }
+
+    fn draw(&self, gl: &WebGlRenderingContext, s: &AppState) 
     {
         gl.use_program(Some(&self.program));
         
         let projection = matrix::get_3d_projection_matrix(
-            bottom, top, left, right, 
-            canvas_width, canvas_height, rotation_angle_x, rotation_angle_y, scale);
+            s.border_bottom, s.border_top, s.border_left, s.border_right, 
+            s.canvas_width, s.canvas_height, s.cam_rotation_x, s.cam_rotation_y, s.mouse_scroll);
 
         gl.enable_vertex_attrib_array(0);
         gl.uniform_matrix4fv_with_f32_array(Some(&self.u_projection), false, &projection);

@@ -4,11 +4,15 @@ use web_sys::*;
 use web_sys::WebGlRenderingContext as GL;
 use js_sys::WebAssembly;
 
+use crate::core_state::AppState;
+
 use super::super::gl_common;
 use super::super::gl_common::{DrawType, BufferType};
 use super::super::math::matrix;
 
-pub struct Program1 
+use super::Scene;
+
+pub struct Scene1 
 {
     program: WebGlProgram,
     buffer: WebGlBuffer,
@@ -19,8 +23,7 @@ pub struct Program1
     u_transform: WebGlUniformLocation,
 }
 
-impl Program1
-{
+impl Scene1 {
     pub fn new(gl: &GL) -> Self {
         
         // setup the program with the shaders
@@ -75,9 +78,11 @@ impl Program1
             buffer: buffer,
         }
     }
+}
 
-    pub fn render(&self, gl: &WebGlRenderingContext, 
-        bottom:f32, top:f32, left:f32, right: f32, canvas_width: f32, canvas_height: f32, total_time: f32)
+impl Scene for Scene1 {
+
+    fn draw(&self, gl: &WebGlRenderingContext, state: &AppState)
     {
         gl.use_program(Some(&self.program));
 
@@ -85,7 +90,6 @@ impl Program1
         gl.enable_vertex_attrib_array(0);
         gl.bind_buffer(GL::ARRAY_BUFFER, Some(&self.buffer));
         gl.vertex_attrib_pointer_with_i32(0, 2, GL::FLOAT, false, 0, 0);
-        
 
         // 
         gl.uniform4f(Some(&self.u_color), 0., 1.0, 0.5, 1.0);
@@ -93,19 +97,27 @@ impl Program1
         
 
         let tm = matrix::create_translation(
-            2. * left / canvas_width -1.,
-            2. * bottom / canvas_height - 1.,
+            2. * state.border_left / state.canvas_width -1.,
+            2. * state.border_bottom / state.canvas_height - 1.,
             0.
         );
 
         let sm = matrix::create_scale(
-            2. * (right - left) / canvas_width,
-            2. * (top - bottom) / canvas_height,
+            2. * (state.border_right - state.border_left) / state.canvas_width,
+            2. * (state.border_top - state.border_bottom) / state.canvas_height,
             0.
         );
 
         let matrix = matrix::multiply(sm, tm);
         gl.uniform_matrix4fv_with_f32_array(Some(&self.u_transform), false, &matrix);
         gl.draw_arrays(GL::TRIANGLES, 0, (self.buffer_length / 2) as i32);
+    }
+
+    fn start(&self) {
+        //
+    }
+
+    fn update(&mut self, state: &AppState) {
+        //
     }
 }

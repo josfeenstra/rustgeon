@@ -36,7 +36,7 @@ pub fn init_webgl_context() -> Result<WebGlRenderingContext, JsValue>
 
 fn attach_mouse_down_handler(canvas: &HtmlCanvasElement) -> Result<(), JsValue> {
     let handler = move |event: web_sys::MouseEvent| {
-        super::super::app_state::update_mouse_down(event.client_x() as f32, event.client_y() as f32, true);
+        super::super::core_state::update_mouse_down(event.client_x() as f32, event.client_y() as f32, true);
     };
 
     let handler = Closure::wrap(Box::new(handler) as Box<dyn FnMut(_)>);
@@ -48,7 +48,7 @@ fn attach_mouse_down_handler(canvas: &HtmlCanvasElement) -> Result<(), JsValue> 
 
 fn attach_mouse_up_handler(canvas: &HtmlCanvasElement) -> Result<(), JsValue> {
     let handler = move |event: web_sys::MouseEvent| {
-        super::super::app_state::update_mouse_down(event.client_x() as f32, event.client_y() as f32, false);
+        super::super::core_state::update_mouse_down(event.client_x() as f32, event.client_y() as f32, false);
     };
 
     let handler = Closure::wrap(Box::new(handler) as Box<dyn FnMut(_)>);
@@ -60,7 +60,7 @@ fn attach_mouse_up_handler(canvas: &HtmlCanvasElement) -> Result<(), JsValue> {
 
 fn attach_mouse_move_handler(canvas: &HtmlCanvasElement) -> Result<(), JsValue> {
     let handler = move |event: web_sys::MouseEvent| {
-        super::super::app_state::update_mouse_position(event.client_x() as f32, event.client_y() as f32);
+        super::super::core_state::update_mouse_position(event.client_x() as f32, event.client_y() as f32);
     };
 
     let handler = Closure::wrap(Box::new(handler) as Box<dyn FnMut(_)>);
@@ -72,7 +72,7 @@ fn attach_mouse_move_handler(canvas: &HtmlCanvasElement) -> Result<(), JsValue> 
 
 fn attach_mouse_scroll_handler(canvas: &HtmlCanvasElement) -> Result<(), JsValue> {
     let handler = move |event: web_sys::WheelEvent| {
-        super::super::app_state::update_mouse_scroll(event.delta_x() as f32);
+        super::super::core_state::update_mouse_scroll(event.delta_x() as f32);
     };
 
     let handler = Closure::wrap(Box::new(handler) as Box<dyn FnMut(_)>);

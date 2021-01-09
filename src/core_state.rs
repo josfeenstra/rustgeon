@@ -1,7 +1,13 @@
-// static global stuff 
-
+////////////////////////////////////////////////////////////////////////////////
+// Author :         Jos Feenstra
+// Based upon:      Doug Milfords' Rust 3D Graphics tutorials
+// 
+// File purpose :   Static Global Values.
+////////////////////////////////////////////////////////////////////////////////
 use std::sync::Arc;
 use std::sync::Mutex;
+
+use crate::systems::console;
 
 lazy_static! {
     static ref APP_STATE: Mutex<Arc<AppState>> = 
@@ -133,6 +139,9 @@ pub fn update_mouse_position(x: f32, y: f32) {
 
 pub fn update_mouse_scroll(delta: f32) {
     let mut data = APP_STATE.lock().unwrap();
+
+    console::log(&data.mouse_scroll.to_string());
+
     *data = Arc::new(AppState {
         mouse_scroll: data.mouse_scroll + delta,
         ..*data.clone()

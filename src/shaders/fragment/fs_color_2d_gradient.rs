@@ -1,4 +1,5 @@
 pub const SHADER: &str = r#"
+
     precision mediump float;
     
     uniform float uOpacity;
