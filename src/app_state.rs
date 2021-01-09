@@ -57,6 +57,7 @@ pub struct AppState {
     pub mouse_down: bool,
     pub mouse_x: f32,
     pub mouse_y: f32,
+    pub mouse_scroll: f32,
 
     pub cam_rotation_x: f32,
     pub cam_rotation_y: f32,
@@ -78,6 +79,7 @@ impl AppState {
             mouse_down: false,
             mouse_x: 0.,
             mouse_y: 0.,
+            mouse_scroll: 0.,
         
             cam_rotation_x: 0.5,
             cam_rotation_y: 0.5,
@@ -98,8 +100,7 @@ pub fn update_mouse_down(x: f32, y: f32, is_down: bool)
 }
 
 // update camera rotation
-pub fn update_mouse_position(x: f32, y: f32)
-{
+pub fn update_mouse_position(x: f32, y: f32) {
     let mut data = APP_STATE.lock().unwrap();
 
     let inv_y = data.canvas_height - y;
@@ -126,6 +127,14 @@ pub fn update_mouse_position(x: f32, y: f32)
         cam_rotation_x: data.cam_rotation_x + drotx,
         cam_rotation_y: data.cam_rotation_y - droty,
 
+        ..*data.clone()
+    });
+}
+
+pub fn update_mouse_scroll(delta: f32) {
+    let mut data = APP_STATE.lock().unwrap();
+    *data = Arc::new(AppState {
+        mouse_scroll: data.mouse_scroll + delta,
         ..*data.clone()
     });
 }

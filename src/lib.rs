@@ -118,6 +118,7 @@ impl Core {
             state.time,
             state.cam_rotation_x,
             state.cam_rotation_y,
+            state.mouse_scroll,
         );
 
 

@@ -2,8 +2,6 @@
 // based on: Doug Milford's Rust tutorials
 use nalgebra::{Perspective3};
 
-#[allow(dead_code)]
-
 pub fn create_identity() -> [f32; 16]
 {
     [

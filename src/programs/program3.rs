@@ -80,13 +80,13 @@ impl Program3 {
     pub fn render(&self, gl: &WebGlRenderingContext, 
         top:f32, bottom:f32, left:f32, right: f32, 
         canvas_width: f32, canvas_height: f32, _total_time: f32,
-        rotation_angle_x: f32, rotation_angle_y: f32)
+        rotation_angle_x: f32, rotation_angle_y: f32, scale: f32)
     {
         gl.use_program(Some(&self.program));
         
         let projection = matrix::get_3d_projection_matrix(
             bottom, top, left, right, 
-            canvas_width, canvas_height, rotation_angle_x, rotation_angle_y);
+            canvas_width, canvas_height, rotation_angle_x, rotation_angle_y, scale);
 
         gl.enable_vertex_attrib_array(0);
         gl.uniform_matrix4fv_with_f32_array(Some(&self.u_projection), false, &projection);
