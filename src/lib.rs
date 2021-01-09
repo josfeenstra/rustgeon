@@ -80,7 +80,7 @@ impl Core {
     {
         core_state::update_appstate(width, height, time);
         let state = core_state::get_appstate();
-        for scene in self.scenes.iter_mut().rev() {
+        for scene in self.scenes.iter_mut() {
             scene.update(&state);
         }
         Ok(())   
@@ -92,7 +92,7 @@ impl Core {
         let state = core_state::get_appstate();
 
         let oc = (state.time / 1000.).sin();
-        for scene in self.scenes.iter().rev() {
+        for scene in self.scenes.iter() {
             scene.draw(&self.gl, &state);
         }
     }
