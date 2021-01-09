@@ -5,6 +5,8 @@ use web_sys::*;
 use web_sys::WebGlRenderingContext as GL;
 use js_sys::WebAssembly;
 
+use super::console;
+
 pub fn init_webgl_context() -> Result<WebGlRenderingContext, JsValue> 
 {
     // get canvas & gl, deal with dynamic types
@@ -21,6 +23,8 @@ pub fn init_webgl_context() -> Result<WebGlRenderingContext, JsValue>
     attach_mouse_up_handler(&canvas)?;
     attach_mouse_move_handler(&canvas)?;
     attach_mouse_scroll_handler(&canvas)?;
+    attach_key_down_handler(&canvas)?;
+    attach_key_up_handler(&canvas)?;
 
     // configure
     gl.enable(GL::BLEND);
@@ -71,13 +75,42 @@ fn attach_mouse_move_handler(canvas: &HtmlCanvasElement) -> Result<(), JsValue> 
 }
 
 fn attach_mouse_scroll_handler(canvas: &HtmlCanvasElement) -> Result<(), JsValue> {
+    
     let handler = move |event: web_sys::WheelEvent| {
-        super::super::core_state::update_mouse_scroll(event.delta_x() as f32);
+        super::super::core_state::update_mouse_scroll(event.delta_y() as f32);
     };
 
     let handler = Closure::wrap(Box::new(handler) as Box<dyn FnMut(_)>);
-    canvas.add_event_listener_with_callback("mousewheel", handler.as_ref().unchecked_ref())?;
+    canvas.add_event_listener_with_callback("wheel", handler.as_ref().unchecked_ref())?;
     handler.forget();
 
     Ok(())
 }
+
+fn attach_key_down_handler(canvas: &HtmlCanvasElement) -> Result<(), JsValue> {
+    
+    let handler = move |event: web_sys::KeyboardEvent| {
+        super::super::core_state::update_key(event.key(), false);
+    };
+
+    let handler = Closure::wrap(Box::new(handler) as Box<dyn FnMut(_)>);
+    canvas.add_event_listener_with_callback("keypress", handler.as_ref().unchecked_ref())?;
+    handler.forget();
+
+    Ok(())
+}
+
+
+fn attach_key_up_handler(canvas: &HtmlCanvasElement) -> Result<(), JsValue> {
+    
+    let handler = move |event: web_sys::KeyboardEvent| {
+        super::super::core_state::update_key(event.key(), true);
+    };
+
+    let handler = Closure::wrap(Box::new(handler) as Box<dyn FnMut(_)>);
+    canvas.add_event_listener_with_callback("keypress", handler.as_ref().unchecked_ref())?;
+    handler.forget();
+
+    Ok(())
+}
+

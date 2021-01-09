@@ -23,6 +23,7 @@ features = [
     'HtmlCanvasElement',
     'MouseEvent',
     'WheelEvent',
+    'KeyboardEvent',
     'WebGlBuffer',
     'WebGlProgram',
     'WebGlRenderingContext',

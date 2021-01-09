@@ -9,6 +9,8 @@ use std::sync::Mutex;
 
 use crate::systems::console;
 
+
+
 lazy_static! {
     static ref APP_STATE: Mutex<Arc<AppState>> = 
         Mutex::new(Arc::new(AppState::new()));
@@ -140,10 +142,21 @@ pub fn update_mouse_position(x: f32, y: f32) {
 pub fn update_mouse_scroll(delta: f32) {
     let mut data = APP_STATE.lock().unwrap();
 
-    console::log(&data.mouse_scroll.to_string());
+    // console::log(&data.mouse_scroll.to_string());
 
     *data = Arc::new(AppState {
         mouse_scroll: data.mouse_scroll + delta,
+        ..*data.clone()
+    });
+}
+
+pub fn update_key(keyname: String, down: bool) {
+
+    let mut data = APP_STATE.lock().unwrap();
+
+    console::log(&keyname);
+
+    *data = Arc::new(AppState {
         ..*data.clone()
     });
 }

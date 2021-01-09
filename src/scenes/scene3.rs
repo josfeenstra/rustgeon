@@ -92,7 +92,7 @@ impl Scene for Scene3 {
         
         let projection = matrix::get_3d_projection_matrix(
             s.border_bottom, s.border_top, s.border_left, s.border_right, 
-            s.canvas_width, s.canvas_height, s.cam_rotation_x, s.cam_rotation_y, s.mouse_scroll);
+            s.canvas_width, s.canvas_height, s.cam_rotation_x, s.cam_rotation_y, s.mouse_scroll * -0.01);
 
         gl.enable_vertex_attrib_array(0);
         gl.uniform_matrix4fv_with_f32_array(Some(&self.u_projection), false, &projection);

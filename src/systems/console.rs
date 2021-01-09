@@ -14,6 +14,13 @@ pub fn log(message: &String)
     }
 }
 
+pub fn log_str(message: &str)
+{
+    unsafe {
+        js_log(message);
+    }
+}
+
 pub fn log_once(message: &String, key: &str)
 {
     let mut map = LOGMAP.lock().unwrap();
