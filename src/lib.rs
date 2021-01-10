@@ -83,6 +83,7 @@ impl Core {
         for scene in self.scenes.iter_mut() {
             scene.update(&state);
         }
+        core_state::next_frame();
         Ok(())   
     }
 

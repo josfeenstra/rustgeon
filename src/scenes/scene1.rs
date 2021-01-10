@@ -4,7 +4,7 @@ use web_sys::*;
 use web_sys::WebGlRenderingContext as GL;
 use js_sys::WebAssembly;
 
-use crate::core_state::AppState;
+use crate::{core_state::AppState, systems::{console, keys::Key}};
 
 use super::super::gl_common;
 use super::super::gl_common::{DrawType, BufferType};
@@ -119,5 +119,9 @@ impl Scene for Scene1 {
 
     fn update(&mut self, state: &AppState) {
         //
+
+        if state.keydown(Key::A) {
+            console::log_str("its down!");
+        }
     }
 }

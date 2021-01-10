@@ -4,15 +4,18 @@
 // 
 // File purpose :   Static Global Values.
 ////////////////////////////////////////////////////////////////////////////////
-use std::sync::Arc;
+use std::{collections::HashMap, sync::Arc};
 use std::sync::Mutex;
 
-use crate::systems::console;
+use crate::systems::{console, keys::Key};
 
 
 
 lazy_static! {
     static ref APP_STATE: Mutex<Arc<AppState>> = 
+        Mutex::new(Arc::new(AppState::new()));
+
+    static ref KEY_STATE: Mutex<Arc<AppState>> = 
         Mutex::new(Arc::new(AppState::new()));
 }
 
@@ -69,10 +72,15 @@ pub struct AppState {
 
     pub cam_rotation_x: f32,
     pub cam_rotation_y: f32,
+
+    key_mapping: [bool; 255],
+    key_mapping_old: [bool; 255],
 }
 
 impl AppState {
     fn new() -> Self {
+        
+        
         Self {
             canvas_height: 0.,
             canvas_width: 0.,
@@ -91,8 +99,42 @@ impl AppState {
         
             cam_rotation_x: 0.5,
             cam_rotation_y: 0.5,
-        }
+
+            key_mapping: [false; 255],
+            key_mapping_old: [false; 255],
+        }     
     }
+
+    // signal to the key mapping that this is a new frame.
+    // fire this at the end of all update steps
+
+    pub fn set_keystate(&mut self, k: Key, state: bool) {
+        let i = k.to_mapping() as usize;
+        self.key_mapping[i] = state;
+    }
+
+    pub fn keydown(&self, k: Key) -> bool {
+        self.key_mapping.get(k.to_mapping() as usize).expect("invalid key").clone()
+    }
+
+    pub fn keypressed(&self, k: Key) -> bool {
+        let down = self.key_mapping.get(k.to_mapping() as usize).expect("invalid key").clone();
+        let down_old = self.key_mapping.get(k.to_mapping() as usize).expect("invalid key").clone();
+        down && !down_old
+    }
+
+    pub fn keyup(&self, k: Key) -> bool {
+        !self.key_mapping.get(k.to_mapping() as usize).expect("invalid key").clone()
+    }
+}
+
+pub fn next_frame() {
+    let mut data = APP_STATE.lock().unwrap();
+
+    *data = Arc::new(AppState {
+        key_mapping_old: data.key_mapping.clone(),
+        ..*data.clone()
+    });
 }
 
 // update mouse data
@@ -153,10 +195,15 @@ pub fn update_mouse_scroll(delta: f32) {
 pub fn update_key(keyname: String, down: bool) {
 
     let mut data = APP_STATE.lock().unwrap();
-
     console::log(&keyname);
 
-    *data = Arc::new(AppState {
+    let mut new_app = AppState {
         ..*data.clone()
-    });
+    };
+
+    let k = Key::from_string(&keyname).unwrap_or(Key::N0);
+
+    new_app.set_keystate(k, down);
+
+    *data = Arc::new(new_app);
 }

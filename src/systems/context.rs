@@ -23,6 +23,7 @@ pub fn init_webgl_context() -> Result<WebGlRenderingContext, JsValue>
     attach_mouse_up_handler(&canvas)?;
     attach_mouse_move_handler(&canvas)?;
     attach_mouse_scroll_handler(&canvas)?;
+
     attach_key_down_handler(&canvas)?;
     attach_key_up_handler(&canvas)?;
 
@@ -90,7 +91,7 @@ fn attach_mouse_scroll_handler(canvas: &HtmlCanvasElement) -> Result<(), JsValue
 fn attach_key_down_handler(canvas: &HtmlCanvasElement) -> Result<(), JsValue> {
     
     let handler = move |event: web_sys::KeyboardEvent| {
-        super::super::core_state::update_key(event.key(), false);
+        super::super::core_state::update_key(event.key(), true);
     };
 
     let handler = Closure::wrap(Box::new(handler) as Box<dyn FnMut(_)>);
@@ -104,8 +105,10 @@ fn attach_key_down_handler(canvas: &HtmlCanvasElement) -> Result<(), JsValue> {
 fn attach_key_up_handler(canvas: &HtmlCanvasElement) -> Result<(), JsValue> {
     
     let handler = move |event: web_sys::KeyboardEvent| {
-        super::super::core_state::update_key(event.key(), true);
+        super::super::core_state::update_key(event.key(), false);
     };
+
+    console::log_str("activated!");
 
     let handler = Closure::wrap(Box::new(handler) as Box<dyn FnMut(_)>);
     canvas.add_event_listener_with_callback("keyup", handler.as_ref().unchecked_ref())?;
