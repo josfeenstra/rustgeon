@@ -20,20 +20,18 @@ use scenes::Scene;
 use wasm_bindgen::prelude::*; // still dont really know what prelude does
 // use web_sys::*;
 use web_sys::WebGlRenderingContext as GL;
-
 #[macro_use] 
 extern crate lazy_static;
 
-mod core_state;
 mod shaders;
 mod math;
 mod geometry;
 mod scenes;
 mod systems;
+mod render;
 
-use systems::{console, gl_common};
-use systems::context;
-
+use systems::{core_state, console, context};
+use render::gl_common;
 
 // some messy barebones logging
 

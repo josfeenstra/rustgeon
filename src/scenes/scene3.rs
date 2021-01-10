@@ -33,7 +33,7 @@ pub struct Scene3 {
     // true data 
     pub y_data: Vec<f32>,
     pub size: i32,
-    pub keyScale: f32,
+    pub key_scale: f32,
 }
 
 impl Scene3 {
@@ -73,7 +73,7 @@ impl Scene3 {
 
             // general
             size: size as i32,
-            keyScale: 0.,
+            key_scale: 0.,
         }
     }
 }
@@ -90,11 +90,11 @@ impl Scene for Scene3 {
         // key test 
         if s.keypressed(Key::Minus) {
             console::log_str("minus");
-            self.keyScale += 30.;
+            self.key_scale += 30.;
         }
         if s.keypressed(Key::Plus) {
             console::log_str("plus");
-            self.keyScale -= 30.;
+            self.key_scale -= 30.;
         }
     }
 
@@ -104,7 +104,7 @@ impl Scene for Scene3 {
         
         let projection = matrix::get_3d_projection_matrix(
             s.border_bottom, s.border_top, s.border_left, s.border_right, 
-            s.canvas_width, s.canvas_height, s.cam_rotation_x, s.cam_rotation_y, (s.mouse_scroll + self.keyScale) * -0.01);
+            s.canvas_width, s.canvas_height, s.cam_rotation_x, s.cam_rotation_y, (s.mouse_scroll + self.key_scale) * -0.01);
 
         gl.enable_vertex_attrib_array(0);
         gl.uniform_matrix4fv_with_f32_array(Some(&self.u_projection), false, &projection);
