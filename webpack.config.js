@@ -11,9 +11,9 @@ module.exports = (env, args) => {
     return {
         entry: './index.js',
         output: {
-            // using hashes make sure that old cashes are succcesfully taken care off
+            // using hashes make sure that old cashes are succcesfully taken care off [contentHash]
             path: path.resolve(__dirname, buildpath),
-            filename: isProductionMode ? '[name].[contenthash].js' : '[name].[hash].js',
+            filename: isProductionMode ? '[name].js' : '[name].[hash].js',
         },
         plugins: [
             new HtmlWebpackPlugin({
