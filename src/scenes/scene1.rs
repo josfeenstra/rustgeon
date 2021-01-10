@@ -118,10 +118,16 @@ impl Scene for Scene1 {
     }
 
     fn update(&mut self, state: &AppState) {
-        //
-
-        if state.keydown(Key::A) {
+        
+        // key test 
+        if state.keypressed(Key::Space) {
+            console::log_str("pressed!");
+        }
+        if state.keydown(Key::Space) {
             console::log_str("its down!");
+        }
+        if state.keyreleased(Key::Space) {
+            console::log_str("released!");
         }
     }
 }

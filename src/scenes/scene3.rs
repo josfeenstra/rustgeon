@@ -4,7 +4,7 @@ use web_sys::*;
 use web_sys::WebGlRenderingContext as GL;
 use js_sys::WebAssembly;
 
-use crate::core_state::AppState;
+use crate::{core_state::AppState, systems::{console, keys::Key}};
 
 use super::super::gl_common;
 use super::super::gl_common::{DrawType, BufferType};
@@ -33,6 +33,7 @@ pub struct Scene3 {
     // true data 
     pub y_data: Vec<f32>,
     pub size: i32,
+    pub keyScale: f32,
 }
 
 impl Scene3 {
@@ -72,6 +73,7 @@ impl Scene3 {
 
             // general
             size: size as i32,
+            keyScale: 0.,
         }
     }
 }
@@ -84,6 +86,16 @@ impl Scene for Scene3 {
 
     fn update(&mut self, s: &AppState) {
         self.y_data = get_updated_3d_y_values(self.size as usize, s.time);
+
+        // key test 
+        if s.keypressed(Key::Minus) {
+            console::log_str("minus");
+            self.keyScale += 30.;
+        }
+        if s.keypressed(Key::Plus) {
+            console::log_str("plus");
+            self.keyScale -= 30.;
+        }
     }
 
     fn draw(&self, gl: &WebGlRenderingContext, s: &AppState) 
@@ -92,7 +104,7 @@ impl Scene for Scene3 {
         
         let projection = matrix::get_3d_projection_matrix(
             s.border_bottom, s.border_top, s.border_left, s.border_right, 
-            s.canvas_width, s.canvas_height, s.cam_rotation_x, s.cam_rotation_y, s.mouse_scroll * -0.01);
+            s.canvas_width, s.canvas_height, s.cam_rotation_x, s.cam_rotation_y, (s.mouse_scroll + self.keyScale) * -0.01);
 
         gl.enable_vertex_attrib_array(0);
         gl.uniform_matrix4fv_with_f32_array(Some(&self.u_projection), false, &projection);

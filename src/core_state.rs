@@ -117,14 +117,21 @@ impl AppState {
         self.key_mapping.get(k.to_mapping() as usize).expect("invalid key").clone()
     }
 
+    pub fn keyup(&self, k: Key) -> bool {
+        !self.key_mapping.get(k.to_mapping() as usize).expect("invalid key").clone()
+    }
+
     pub fn keypressed(&self, k: Key) -> bool {
         let down = self.key_mapping.get(k.to_mapping() as usize).expect("invalid key").clone();
-        let down_old = self.key_mapping.get(k.to_mapping() as usize).expect("invalid key").clone();
+        let down_old = self.key_mapping_old.get(k.to_mapping() as usize).expect("invalid key").clone();
+        
         down && !down_old
     }
 
-    pub fn keyup(&self, k: Key) -> bool {
-        !self.key_mapping.get(k.to_mapping() as usize).expect("invalid key").clone()
+    pub fn keyreleased(&self, k: Key) -> bool {
+        let down = self.key_mapping.get(k.to_mapping() as usize).expect("invalid key").clone();
+        let down_old = self.key_mapping_old.get(k.to_mapping() as usize).expect("invalid key").clone();
+        !down && down_old
     }
 }
 
@@ -195,7 +202,7 @@ pub fn update_mouse_scroll(delta: f32) {
 pub fn update_key(keyname: String, down: bool) {
 
     let mut data = APP_STATE.lock().unwrap();
-    console::log(&keyname);
+    // console::log(&keyname);
 
     let mut new_app = AppState {
         ..*data.clone()

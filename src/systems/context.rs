@@ -108,8 +108,6 @@ fn attach_key_up_handler(canvas: &HtmlCanvasElement) -> Result<(), JsValue> {
         super::super::core_state::update_key(event.key(), false);
     };
 
-    console::log_str("activated!");
-
     let handler = Closure::wrap(Box::new(handler) as Box<dyn FnMut(_)>);
     canvas.add_event_listener_with_callback("keyup", handler.as_ref().unchecked_ref())?;
     handler.forget();
