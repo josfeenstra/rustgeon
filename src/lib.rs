@@ -67,7 +67,7 @@ impl Core {
         Self {
             scenes: vec![
                 Box::new(scenes::Scene1::new(&gl)),
-                Box::new(scenes::Scene3::new(&gl, 50))
+                Box::new(scenes::Scene3::new(&gl, 200))
                 ],
             gl: gl,
         }

@@ -95,7 +95,7 @@ impl Scene for Scene1 {
         gl.vertex_attrib_pointer_with_i32(0, 2, GL::FLOAT, false, 0, 0);
 
         // 
-        gl.uniform4f(Some(&self.u_color), 0., 1.0, 0.5, 1.0);
+        gl.uniform4f(Some(&self.u_color), 0., 0.5, 0.5, 1.0);
         gl.uniform1f(Some(&self.u_opacity), 1.0);
         
 

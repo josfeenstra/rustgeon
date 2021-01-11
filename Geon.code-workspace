@@ -1,9 +1,6 @@
 {
 	"folders": [
 		{
-			"path": "..\\..\\Web\\Geon"
-		},
-		{
 			"path": "..\\..\\Web\\Blood & Toil"
 		},
 		{
@@ -14,7 +11,7 @@
 		}
 	],
 	"settings": {
-		"liveServer.settings.multiRootWorkspaceName": "geon",
+		"liveServer.settings.multiRootWorkspaceName": "Geon",
 		"editor.rulers": [
 			80, 120
 		],

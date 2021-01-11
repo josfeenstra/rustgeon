@@ -1,1 +1,0 @@
-github recognises a folder called 'docs', and auto publishes it. at https://josfeenstra.github.io/rustgeon/.
