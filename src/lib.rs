@@ -23,7 +23,6 @@ use web_sys::WebGlRenderingContext as GL;
 #[macro_use] 
 extern crate lazy_static;
 
-mod shaders;
 mod math;
 mod geometry;
 mod scenes;

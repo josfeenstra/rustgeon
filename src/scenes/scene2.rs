@@ -28,8 +28,8 @@ impl Scene2 {
         // setup the program with the shaders
         let program = gl_common::link_program(
             &gl, 
-            super::super::shaders::vertex::vs_color_2d_gradient::SHADER,
-            super::super::shaders::fragment::fs_color_2d_gradient::SHADER,
+            crate::render::shaders::vertex::vs_color_2d_gradient::SHADER,
+            crate::render::shaders::fragment::fs_color_2d_gradient::SHADER,
         ).unwrap();
 
         // feed the shaders some nice data

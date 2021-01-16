@@ -1,3 +1,7 @@
+// scene 4
+// author: Jos Feenstra
+// purpose: trying out Vector & Matrix structs
+
 use wasm_bindgen::JsCast;
 use wasm_bindgen::JsValue;
 use web_sys::*;
@@ -12,68 +16,25 @@ use super::super::math::matrix;
 use super::super::geometry;
 use super::Scene;
 
-pub struct Scene3 {
+pub struct Scene4 {
 
-    // programs
-    pub program: WebGlProgram,
-
-    // buffers
-    pub index_buffer: WebGlBuffer,
-    pub index_count: i32,
+    pr: PointRenderer,
+    vectors: vec<Vector>
     
-    pub verts_buffer: WebGlBuffer,
-    pub verts_count: i32,
-
-    pub y_buffer: WebGlBuffer,
-
-    // uniforms
-    pub u_opacity: WebGlUniformLocation,
-    pub u_projection: WebGlUniformLocation,
-
-    // true data 
-    pub y_data: Vec<f32>,
-    pub size: i32,
-    pub key_scale: f32,
 }
 
-impl Scene3 {
+impl Scene4 {
 
     pub fn new(gl: &WebGlRenderingContext, size: usize) -> Self {
         
-        let program = gl_common::link_program(
-            &gl,
-            crate::render::shaders::vertex::vs_graph_3d::SHADER,
-            crate::render::shaders::fragment::fs_color_3d::SHADER,
-        ).unwrap();
         
         // THE ACTUAL DATA
         let mesh = geometry::mesh::create_grid(size);
         let y_data = vec![0.0; mesh.verts.len()];
 
-        let verts_buffer = gl_common::setup_buffer_f32(&gl, &mesh.verts, BufferType::Regular, DrawType::Static);
-        let index_buffer = gl_common::setup_buffer_u16(&gl, &mesh.indices, BufferType::Element, DrawType::Static);
-        let y_buffer = gl_common::setup_buffer_f32(&gl, &y_data, BufferType::Regular, DrawType::Dynamic);
 
         Self {
-            
-            // uniforms
-            u_opacity: gl.get_uniform_location(&program, "uOpacity").unwrap(),
-            u_projection: gl.get_uniform_location(&program, "uProjection").unwrap(),
-
-            // buffers
-            index_buffer: index_buffer,
-            index_count: mesh.indices.len() as i32,
-            verts_buffer: verts_buffer,
-            verts_count: mesh.verts.len() as i32,
-
-            // program
-            program: program,
-            y_buffer: y_buffer,
-            y_data: y_data,
-
-            // general
-            size: size as i32,
-            key_scale: 0.,
+            pr: PointRenderer::new(gl, )
         }
     }
 }
