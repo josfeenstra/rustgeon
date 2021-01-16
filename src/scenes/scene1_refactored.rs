@@ -15,8 +15,8 @@ use super::super::math::matrix;
 
 use super::Scene;
 
-pub struct Scene1 
-{
+pub struct Scene1 {
+    
     program: WebGlProgram,
     buffer: WebGlBuffer,
     buffer_length: usize,
@@ -47,9 +47,6 @@ impl Scene1 {
         ];
         let verts_ptr = verts.as_ptr() as u32 / 4; // divided by 4??
 
-
-        // lets get a buffer
-
         let buffer = gl_common::setup_buffer_f32( 
             &gl,
             &verts,
@@ -57,19 +54,6 @@ impl Scene1 {
             DrawType::Static,
         );
 
-        // let mem_buffer = wasm_bindgen::memory()
-        //     .dyn_into::<WebAssembly::Memory>()
-        //     .unwrap()
-        //     .buffer();        
-        // let verts_js = js_sys::Float32Array::new(&mem_buffer).subarray(
-        //     verts_ptr,
-        //     verts_ptr + verts.len() as u32,
-        // );
-        // let buffer = gl.create_buffer().ok_or("failed to create buffer...").unwrap();
-        // gl.bind_buffer(GL::ARRAY_BUFFER, Some(&buffer));
-        // gl.buffer_data_with_array_buffer_view(GL::ARRAY_BUFFER, &verts_js, GL::STATIC_DRAW);
-
-        // 
         Self 
         {
             u_color: gl.get_uniform_location(&program, "uColor").unwrap(),
